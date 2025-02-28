@@ -1,8 +1,9 @@
 import socket
 
 # SERVER_IP = 'localhost'
-SERVER_IP = '127.0.0.1'
+SERVER_IP = '10.42.0.1'     # IP of Raspberry Pi
 SERVER_PORT = 8888
+BUFFER_SIZE = 1024
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server:
 
@@ -14,14 +15,14 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server:
     print(f'conneted to {client_addr}')
 
     while True:
-        data = client_conn.recv(1024)
+        data = client_conn.recv(BUFFER_SIZE)    # buffer size is 1 kB
         print(f'received: {data}')
 
-        if(data.decode() == 'qq'):
-            server.close()
+        if(data.decode() == 'qq'):  # data needs to be decoded from byte to UTF-8 (default for Python)
+            server.close()          # return all resources assigned to server to OS
             break
         elif(data.decode() == ''):
             server.close()
             break
         else:
-            client_conn.send(data)
+            client_conn.send(data)  # send data back to client
